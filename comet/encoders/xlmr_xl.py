@@ -18,7 +18,7 @@ XLM-RoBERTa-XL Encoder
     Pretrained XLM-RoBERTa-XL  encoder from Hugging Face.
 """
 from transformers import XLMRobertaTokenizerFast, XLMRobertaXLConfig, XLMRobertaXLModel
-
+import torch
 from comet.encoders.base import Encoder
 from comet.encoders.xlmr import XLMREncoder
 
@@ -45,12 +45,12 @@ class XLMRXLEncoder(XLMREncoder):
         )
         if load_pretrained_weights:
             self.model = XLMRobertaXLModel.from_pretrained(
-                pretrained_model, add_pooling_layer=False
+                pretrained_model, add_pooling_layer=False, torch_dtype=torch.float16, device_map="auto"
             )
         else:
             self.model = XLMRobertaXLModel(
                 XLMRobertaXLConfig.from_pretrained(
-                    pretrained_model, local_files_only=local_files_only
+                    pretrained_model, local_files_only=local_files_only, torch_dtype=torch.float16, device_map="auto"
                 ),
                 add_pooling_layer=False,
             )
